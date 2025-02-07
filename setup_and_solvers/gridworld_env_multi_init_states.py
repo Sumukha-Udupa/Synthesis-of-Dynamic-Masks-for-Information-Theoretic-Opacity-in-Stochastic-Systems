@@ -674,7 +674,7 @@ class GridworldGui(Gridworld):
         self.bg = pygame.Surface(self.screen.get_size())
         self.bg_rendered = False  # optimize background render
 
-        imagebig = pygame.image.load('images_for_example/mario.png').convert_alpha()
+        imagebig = pygame.image.load('images_for_example/robot.png').convert_alpha()
         # imagebig = pygame.image.load(
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/mario.png').convert_alpha()
 
@@ -684,28 +684,28 @@ class GridworldGui(Gridworld):
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/brick.png').convert_alpha()
 
         self.obstacle_image = pygame.transform.scale(image_obs, (self.size, self.size))
-        image_princess = pygame.image.load('images_for_example/princess.png').convert_alpha()
+        image_princess = pygame.image.load('images_for_example/goal_A.png').convert_alpha()
         # image_princess = pygame.image.load(
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/princess.png').convert_alpha()
 
         self.princess_image = pygame.transform.scale(image_princess, (self.size, self.size))
-        image_luigi = pygame.image.load('images_for_example/luigi.png').convert_alpha()
+        image_luigi = pygame.image.load('images_for_example/goal_B.png').convert_alpha()
         # image_luigi = pygame.image.load(
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/luigi.png').convert_alpha()
 
         self.luigi_image = pygame.transform.scale(image_luigi, (self.size, self.size))
-        image_bomb = pygame.image.load('images_for_example/bo-omb.png').convert_alpha()
+        image_bomb = pygame.image.load('images_for_example/danger.png').convert_alpha()
         # image_bomb = pygame.image.load(
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/bo-omb.png').convert_alpha()
 
         self.bomb_image = pygame.transform.scale(image_bomb, (self.size, self.size))
-        image_plant = pygame.image.load('images_for_example/plant_land_piranha.png').convert_alpha()
+        image_plant = pygame.image.load('images_for_example/danger.png').convert_alpha()
         # image_plant = pygame.image.load(
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/plant_land_piranha.png').convert_alpha()
 
         self.plant_image = pygame.transform.scale(image_plant, (self.size, self.size))
 
-        toad_image = pygame.image.load('images_for_example/toad.png').convert_alpha()
+        toad_image = pygame.image.load('images_for_example/goal_C.png').convert_alpha()
         # image_plant = pygame.image.load(
         #     'C:/Users/sudupa/Desktop/Sensor_deception_with_hidden_sensor/sensor_deception_hidden_sensor_setup/Examples/figures_for_Mario_example/plant_land_piranha.png').convert_alpha()
 

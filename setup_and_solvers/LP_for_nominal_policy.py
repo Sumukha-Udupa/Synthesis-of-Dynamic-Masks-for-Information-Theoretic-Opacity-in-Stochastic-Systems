@@ -132,8 +132,14 @@ def LP(mdp, gamma):
         for a in range(act_len):
             denominator = sum(
                 m[(i * act_len) + a_dash].x for a_dash in range(act_len))
+            if denominator < 0:
+                denominator = 0
+
             if denominator != 0:
-                pol[(mdp.statespace[i], mdp.A[a])] = m[(i * act_len) + a].x / denominator
+                if m[(i * act_len) + a].x > 0:
+                    pol[(mdp.statespace[i], mdp.A[a])] = min(1, m[(i * act_len) + a].x / denominator)
+                else:
+                    pol[(mdp.statespace[i], mdp.A[a])] = 0
             else:
                 pol[(mdp.statespace[i], mdp.A[a])] = 0
 
@@ -145,6 +151,36 @@ def LP(mdp, gamma):
     #
     # with open('policy_6_by_6_dynamic_sensor_0.4.pickle', 'wb') as file:
     #     pickle.dump(pol, file)
+
+    # # The following is the modification for the goal policy
+    # pol[(0, 'W')] = 1
+    # pol[(6, 'S')] = 0
+    # pol[(6, 'E')] = 1
+    # pol[(18, 'S')] = 0
+    # pol[(18, 'E')] = 1
+    # pol[(30, 'E')] = 0.5
+    # pol[(30, 'N')] = 0.5
+    # # pol[(12, 'S')] = 0
+    # # pol[(12, 'N')] = 1
+    # # pol[(7, 'E')] = 1
+    # pol[(1, 'N')] = 1
+    # # pol[(14, 'N')] = 1
+
+    # The following is the modification for the goal policy
+    pol[(0, 'W')] = 1
+    pol[(6, 'S')] = 0
+    pol[(6, 'E')] = 1
+    pol[(18, 'S')] = 0
+    pol[(18, 'E')] = 1
+    pol[(30, 'E')] = 0.5
+    pol[(30, 'N')] = 0.5
+    pol[(12, 'S')] = 0
+    pol[(12, 'N')] = 1
+    pol[(7, 'E')] = 0.5
+    pol[(7, 'N')] = 0.5
+    pol[(1, 'N')] = 1
+    pol[(14, 'N')] = 1
+
     return pol
 
 
