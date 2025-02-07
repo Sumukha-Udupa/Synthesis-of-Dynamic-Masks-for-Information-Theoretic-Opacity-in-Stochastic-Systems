@@ -1,4 +1,6 @@
 # Synthesis of Dynamic Masks for Information Theoretic Opacity in Stochastic Systems
+[![DOI](https://zenodo.org/badge/871313574.svg)](https://doi.org/10.5281/zenodo.14835001)
+
 
 ## Description
 
