@@ -4,7 +4,7 @@
 
 ## Description
 
-In this work, we investigate the synthesis of dynamic information release mechanisms, referred to as 'masks', to reduce the information leakage from a stochastic system to an external observer.
+In this work, we investigate the synthesis of dynamic information release mechanisms, called 'masks', to reduce the information leakage from a stochastic system to an external observer. Specifically, for a stochastic system, an observer aims to infer whether the final state of the system trajectory belongs to a set of secret states. The dynamic mask seeks to regulate sensor information to maximize the observer's uncertainty about the final state, a property known as final-state opacity. While existing supervisory control literature on dynamic masks primarily addresses qualitative opacity, we propose quantifying opacity in stochastic systems by conditional entropy, which is a measure of information leakage in information security. We then formulate a constrained optimization problem to synthesize a dynamic mask that maximizes final-state opacity under a total cost constraint on masking. To solve this constrained optimal dynamic mask synthesis problem, we develop a novel primal-dual policy gradient method. Additionally, we present a technique for computing the gradient of conditional entropy with respect to the masking policy parameters, leveraging observable operators in hidden Markov models. To demonstrate the effectiveness of our approach, we apply our method to an illustrative example and a stochastic grid world scenario, showing how our algorithm optimally enforces final-state opacity under cost constraints. 
 
 ## Installation
 
@@ -29,7 +29,7 @@ pip install pygame
 
 ## Usage
 
-The setup for the Illustrative example, and Stochastic Gridworld Case Study as given in the paper can be run by running the appropriate script.
+The setup for the Illustrative example and Stochastic Gridworld Case Study as given in the paper can be run by running the appropriate script.
 
 ```bash
 # To run Illustrative example
