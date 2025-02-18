@@ -37,6 +37,27 @@ The Docker image for this project is available on Docker Hub. You can pull it us
 ```bash
 docker pull sumukhaudupa/iccps
 ```
+## Project Structure
+
+|------ Examples
+|        |--- experiment_plots
+|        |--- logs_for_example
+|        |--- pharmaceutical_example_multi_init_states_no_masking
+|        |--- pharmaceutical_example_multi_init_states_final_state_masking
+|        |--- pharmaceutical_example_multi_init_states_modified_obs
+|        |--- running_example
+|        |--- running_example_no_masking
+|        |--- running_example_with_augmented_obs
+|        
+|
+|------ setup_and_solvers
+|        |--- gridworld_env_multi_init_states
+|        |--- hidden_markov_model_of_P2_changed_observations
+|        |--- markov_decision_process
+|        |--- test_gradient_calculation_with_final_masking_policy
+|        |--- test_gradient_entropy_calculations_modified_obs
+|
+
 
 
 ## Usage
