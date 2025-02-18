@@ -48,6 +48,9 @@ docker pull sumukhaudupa/iccps
 |        |--- running_example
 |        |--- running_example_no_masking
 |        |--- running_example_with_augmented_obs
+|        |--- script_for_illustrative_example_results
+|        |--- script_for_pharma_example_no_masking_and_final_state_masking
+|        |--- script_for_pharma_example_with_dynamic_masking
 |        
 |
 |------ setup_and_solvers
