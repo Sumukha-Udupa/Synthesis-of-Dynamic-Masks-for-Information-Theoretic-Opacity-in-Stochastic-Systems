@@ -36,6 +36,7 @@ The Docker image for this project is available on Docker Hub. You can pull it us
 
 ```bash
 docker pull sumukhaudupa/iccps
+```
 
 
 ## Usage
