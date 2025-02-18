@@ -27,6 +27,17 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 pip install pygame
 ```
 
+Or alternatively use the Docker image:
+[Docker Hub Repository](https://hub.docker.com/r/sumukhaudupa/iccps)
+
+## Docker Image
+
+The Docker image for this project is available on Docker Hub. You can pull it using:
+
+```bash
+docker pull sumukhaudupa/iccps
+
+
 ## Usage
 
 The setup for the Illustrative example and Stochastic Gridworld Case Study as given in the paper can be run by running the appropriate script.
