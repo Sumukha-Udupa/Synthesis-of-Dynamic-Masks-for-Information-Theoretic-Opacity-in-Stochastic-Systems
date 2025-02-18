@@ -38,7 +38,7 @@ The Docker image for this project is available on Docker Hub. You can pull it us
 docker pull sumukhaudupa/iccps
 ```
 ## Project Structure
-
+```plaintext
 |------ Examples
 |        |--- experiment_plots
 |        |--- logs_for_example
@@ -57,7 +57,7 @@ docker pull sumukhaudupa/iccps
 |        |--- test_gradient_calculation_with_final_masking_policy
 |        |--- test_gradient_entropy_calculations_modified_obs
 |
-
+```
 
 
 ## Usage
