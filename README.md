@@ -78,9 +78,7 @@ Examples/script_for_pharma_example_with_dynamic_masking.py
 
 ## Adaptation
 
-- The code may be adapted for any other
-
-- If any code modification needs to be done for their respective work, the Gridworld environment may be modified in the corresponding scripts:
+- If any code modification needs to be done for any other work, the Gridworld environment may be modified in the corresponding scripts:
 
   - `Examples/pharmaceutical_example_multi_init_states_no_masking.py`
   - `Examples/pharmaceutical_example_with_multiple_init_states_final_state_masking.py`
