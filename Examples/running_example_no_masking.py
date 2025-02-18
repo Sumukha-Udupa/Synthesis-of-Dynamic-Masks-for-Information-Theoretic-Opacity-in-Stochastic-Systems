@@ -5,7 +5,8 @@ from setup_and_solvers.test_gradient_entropy_calculations_modified_obs import *
 from setup_and_solvers.markov_decision_process import *
 
 
-def run_experiment_with_no_masking(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.1, threshold=20, exp_number=1):
+def run_experiment_with_no_masking(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.1, threshold=20,
+                                   exp_number=1):
     logger.add("logs_for_examples/log_file_for_running_example_no_masking.log")
 
     logger.info("This is the log file for the running example with secret goal states s4 and s6 and no masking.")
@@ -80,12 +81,7 @@ def run_experiment_with_no_masking(iter_num=1000, batch_size=100, V=100, T=3, et
     sensor_cost['G'] = 10
     sensor_cost['P'] = 10
     sensor_cost['B'] = 30
-    # sensor_cost['E'] = 15
     sensor_cost['F'] = 0  # Cost for not masking.
-
-    # Define a threshold for sensor masking.
-    # threshold = 60
-    # threshold = 20
 
     sensor_cost_normalization = sum(abs(cost) for cost in sensor_cost.values())
 
@@ -152,10 +148,12 @@ def run_experiment_with_no_masking(iter_num=1000, batch_size=100, V=100, T=3, et
     #                                                        epsilon=threshold,
     #                                                        sensor_cost_normalization=sensor_cost_normalization)
 
-    masking_policy_gradient = PrimalDualPolicyGradientTest(hmm=hmm_p2, iter_num=iter_num, batch_size=batch_size, V=V, T=T,
+    masking_policy_gradient = PrimalDualPolicyGradientTest(hmm=hmm_p2, iter_num=iter_num, batch_size=batch_size, V=V,
+                                                           T=T,
                                                            eta=eta,
                                                            kappa=kappa,
                                                            epsilon=threshold,
-                                                           sensor_cost_normalization=sensor_cost_normalization,exp_number=exp_number)
+                                                           sensor_cost_normalization=sensor_cost_normalization,
+                                                           exp_number=exp_number)
 
     masking_policy_gradient.solver()

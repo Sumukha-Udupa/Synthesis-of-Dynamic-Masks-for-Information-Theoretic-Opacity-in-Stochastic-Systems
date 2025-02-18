@@ -27,8 +27,7 @@ class HiddenMarkovModelP2:
 
         self.no_mask_act = no_mask_act
 
-        self.augmented_states = list()  # The augmented states space S x \Sigma # TODO: Check if this should be a set
-        # instead? I have made it a list here to ensure that we can have a transition matrix defined appropriately.
+        self.augmented_states = list()  # The augmented states space S x \Sigma
         self.get_augmented_states()
 
         self.augmented_states_indx_dict = dict()
@@ -50,8 +49,7 @@ class HiddenMarkovModelP2:
         # that cover state}
         self.get_state_obs2()
         self.observations = set(
-            self.sensors.sensors)  # TODO: This needs to be changed for generalization if the observation function
-        # TODO: changes!!!
+            self.sensors.sensors)
         self.observations.add('0')  # '0' represents the null observation.
         self.observations_indx_dict = dict()  # Defining a dictionary with [obs]=indx
         indx_num = 0
@@ -104,7 +102,7 @@ class HiddenMarkovModelP2:
 
     # def get_transition_dict(self): # The transition dict is the transition function such that transition_dict[
     # state][mask][next_state]=probability. for state, mask in itertools.product(self.augmented_states,
-    # self.masking_acts): # TODO: Consider only the post states to populate the trans dict.
+    # self.masking_acts):
 
     def get_transition_dict(self):
         # The transition_dict is the transition function such that transition_dict[state][mask][next_state]=probability.
@@ -145,8 +143,7 @@ class HiddenMarkovModelP2:
         return
 
     def get_emission_probability(self, state,
-                                 obs):  # Check if the following is correct! In the sense, what happens to the
-        # probabilities on masking?!
+                                 obs):
         # Here, I'm considering that when masked, null observation is received with probability 1.
         if len(self.state_obs2[state]) == 0:
             if obs == '0':
@@ -163,7 +160,7 @@ class HiddenMarkovModelP2:
             #     return 0
 
             # True observation with P(obs) and 'null' observation with P(obs_noise).
-            # With special consideration to No Sensor. States under 'NO' always return 'NO' --TODO: Check??
+            # With special consideration to No Sensor. States under 'NO' always return 'NO'
             if state[0] in self.sensors.coverage['NO']:
                 # Use the following when 'NO' and 'Null' are the same.
                 if obs == '0':
@@ -189,7 +186,7 @@ class HiddenMarkovModelP2:
         # mask, we reduce the cost (as it is similar to having simply the maintenance cost.)
         for state in self.augmented_states:
             for mask in self.masking_acts:
-                if state[1] == mask:  # TODO: Check if the indexing in the dictionary is correct!!!!!
+                if state[1] == mask:
                     self.cost_dict[self.augmented_states_indx_dict[state]][self.mask_act_indx_dict[mask]] = 0.5 * \
                                                                                                             self.total_sensor_cost[
                                                                                                                 mask]
@@ -213,7 +210,7 @@ class HiddenMarkovModelP2:
         return
 
     def get_initial_dist(self):
-        # Each augmented state, have an initial distribution. Consider initial mask to be the first sensor. # TODO: Change this to no masking action.
+        # Each augmented state, have an initial distribution. Consider initial mask to be the first sensor.
         for state in self.augmented_states:
             if state[1] == self.no_mask_act:
                 self.initial_dist[state] = self.agent_mdp.initial_distribution[state[0]]
@@ -246,10 +243,7 @@ class HiddenMarkovModelP2:
 
     # the following is the sample_observation for different 'NO' and 'Null'.
     def sample_observation(self, state):
-        # Given an augmented state it gives a sample observation - true observation or null observation. TODO: Check
-        #  if this is correct-- I am considering that whenever the robot is not under a sensor, it only gets the true
-        #  information that it is not under any sensor. TODO: Check if that has to be changed to include null
-        #   observations for it as well.
+        # Given an augmented state it gives a sample observation - true observation or null observation.
         obs_list = list(self.state_obs2[state])
         if len(obs_list) == 0:  # To return null observation with prob. 1 when masked.
             obs_list.append('0')
@@ -263,9 +257,7 @@ class HiddenMarkovModelP2:
 
     # The following is the sample_observation for SAME 'NO' and 'Null'.
     def sample_observation_same_NO_Null(self, state):
-        # Given an augmented state it gives a sample observation - true observation or null observation. TODO: Check
-        #  if this is correct-- I am considering that whenever the robot is not under a sensor, it only gets null.
-
+        # Given an augmented state it gives a sample observation - true observation or null observation.
         obs_list = list(self.state_obs2[state])
         if len(obs_list) == 0:  # To return null observation with prob. 1 when masked.
             obs_list.append('0')

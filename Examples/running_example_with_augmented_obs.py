@@ -6,8 +6,9 @@ from setup_and_solvers.markov_decision_process import *
 
 logger.add("logs_for_examples/log_file_for_running_example_with_obs.log")
 
-logger.info("This is the log file for the running example with augmented one previous observation secret goal states s4 and s6 and planning "
-            "gamma=0.99.")
+logger.info(
+    "This is the log file for the running example with augmented one previous observation secret goal states s4 and s6 and planning "
+    "gamma=0.99.")
 
 # Initial set-up for the MDP.
 
@@ -67,7 +68,6 @@ masking_action[0] = {'R'}
 masking_action[1] = {'G'}
 masking_action[2] = {'P'}
 masking_action[3] = {'B'}
-# masking_action[4] = {'E'}
 masking_action[4] = {'F'}  # 'F' is the no masking action.
 
 no_mask_act = 4
@@ -81,7 +81,6 @@ sensor_cost['R'] = 10
 sensor_cost['G'] = 10
 sensor_cost['P'] = 10
 sensor_cost['B'] = 10
-# sensor_cost['E'] = 15
 sensor_cost['F'] = 0  # Cost for not masking.
 
 # Define a threshold for sensor masking.
@@ -104,12 +103,12 @@ sensor_net.set_coverage('P', setP)
 sensor_net.set_coverage('B', setB)
 sensor_net.set_coverage('NO', setNO)
 
-
 sensor_net.jamming_actions = masking_action
 sensor_net.sensor_noise = sensor_noise
 sensor_net.sensor_cost_dict = sensor_cost
 
-agent_mdp = MDP(init=initial, actlist=actions, states=states, prob=prob, trans=transitions, init_dist=initial_dist, goal_states=target)
+agent_mdp = MDP(init=initial, actlist=actions, states=states, prob=prob, trans=transitions, init_dist=initial_dist,
+                goal_states=target)
 agent_mdp.get_supp()
 agent_mdp.gettrans()
 agent_mdp.get_reward()
@@ -132,8 +131,6 @@ goal_policy[(5, 'b')] = 0
 goal_policy[(6, 'a')] = 0
 goal_policy[(6, 'b')] = 1
 
-
-
 logger.debug("Goal policy:")
 logger.debug(goal_policy)
 
@@ -144,8 +141,6 @@ if prior_compute_flag == 1:
     # Computing the prior entropy.
     # Monte carlo simulation to obtain the approximate probability of being in the final state in T=10.
 
-    # prior_list = list()
-    # iterations_list = list()
     total_prior = 0
 
     for iterations in range(1000):
@@ -182,31 +177,17 @@ if prior_compute_flag == 1:
         probability_of_raching_final_state = final_state_goal_state / 1001
         # print(f"Probability of reaching goal state within T steps: {probability_of_raching_final_state}")
         prior_entropy = probability_of_raching_final_state * math.log2(probability_of_raching_final_state) + (
-                    (1 - probability_of_raching_final_state) * math.log2(1 - probability_of_raching_final_state))
+                (1 - probability_of_raching_final_state) * math.log2(1 - probability_of_raching_final_state))
 
         # print(f"Prior entropy: {-prior_entropy}")
 
         # prior_list.append(-prior_entropy)
         total_prior += (-prior_entropy)
 
-    # iterations_list = range(1000)
-    # # Create the plot
-    # plt.plot(iterations_list, prior_list)
-    #
-    # plt.title('Prior Distribution')
-    # plt.xlabel('Iterations')
-    # plt.ylabel('Entropy')
-    #
-    # plt.grid(True)
-    # plt.show()
-
     print(f"Mean prior entropy = {total_prior / 1000}")
     # print(f"Final state not goal state = {final_state_not_goal_state}")
 
     logger.debug(f"Mean prior entropy = {total_prior / 1000}.")
-
-# TODO: The augmented states still consider the gridcells with obstacles. Try by omitting the obstacle filled states
-#  -> reduces computation.
 
 hmm_p2 = HiddenMarkovModelP2(agent_mdp, sensor_net, goal_policy, secret_goal_states=secret_goal_states,
                              no_mask_act=no_mask_act)

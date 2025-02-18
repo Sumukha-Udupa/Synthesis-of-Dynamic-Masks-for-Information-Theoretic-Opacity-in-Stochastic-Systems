@@ -160,28 +160,6 @@ class PrimalDualPolicyGradientTest:
 
         return T_theta
 
-    # def T_theta_for_comparison(self, pi_theta):
-    #     T_theta_compare = torch.zeros(self.num_of_aug_states, self.num_of_aug_states, dtype=torch.float32,
-    #                                   device=device)
-    #
-    #     # Computing as T_\theta^{i,j} = \Sum_{\sigma' \in \Sigma} P(i\mid j, \sigma') \pi_\theta(\sigma'\mid j).
-    #     for state_j, next_state_i in itertools.product(self.hmm.augmented_states, self.hmm.augmented_states):
-    #         T_theta_compare[self.hmm.augmented_states_indx_dict[next_state_i], self.hmm.augmented_states_indx_dict[
-    #             state_j]] = self.get_transition_probability_for_masking(state_j, next_state_i,
-    #                                                                     pi_theta)
-    #
-    #     return T_theta_compare
-    #
-    # def get_transition_probability_for_masking(self, state_j, next_state_i, pi_theta):
-    #     # Computing \Sum_{\sigma' \in \Sigma} P(i\mid j, \sigma') \pi_\theta(\sigma'\mid j).
-    #     probability = 0.0
-    #     for sigma_prime in self.hmm.masking_acts:
-    #         probability = probability + (self.hmm.transition_mat[self.hmm.augmented_states_indx_dict[state_j],
-    #                                                              self.hmm.augmented_states_indx_dict[next_state_i],
-    #                                                              self.hmm.mask_act_indx_dict[sigma_prime]] * pi_theta[
-    #                                          self.hmm.augmented_states_indx_dict[state_j], self.hmm.mask_act_indx_dict[
-    #                                              sigma_prime]])
-    #     return float(probability)
 
     def construct_B_matrix_torch(self):
         # Populate the B matrix with emission probabilities.
@@ -196,7 +174,6 @@ class PrimalDualPolicyGradientTest:
     def construct_A_matrix_torch(self, T_theta, o_t):
         # Construct the A matrix. A^\theta_{o_t} = T_theta.diag(B_{o_t, 1},...., B_{o_t, N}).
         # o_t is the particular observation.
-        # TODO: see if you can save computation by not repeating the computations of A_o_t by saving them!!!!!!!!!!!!!!!
 
         o_t_index = self.hmm.observations_indx_dict[o_t]
         B_diag = torch.diag(self.B_torch[o_t_index, :])
@@ -259,7 +236,7 @@ class PrimalDualPolicyGradientTest:
         # return resultant_matrix_prob_y_one_less, resultant_matrix, gradient_P_y_one_less
 
     def compute_joint_dist_of_zT_and_obs_less_than_T(self, resultant_matrix,
-                                                     g):  # TODO: This is for verification. This function is not needed, one-hot vector multiplication is simply selecting that particular element from the other vector.
+                                                     g):
         # Computes P_\theta(Z_T, o_{1:T-1})
         # The resultant_matrix --> A^\theta_{o_{T-1:1}}.\mu_0
         # g -> the secret state
@@ -290,7 +267,7 @@ class PrimalDualPolicyGradientTest:
             else:
                 result_P_W_g_Y += (self.hmm.emission_prob[g][o_T] * joint_dist_zT_and_obs_less_T) / result_P_y
             # if flag == 0:
-            #     result_P_W_g_Y = joint_dist_zT_and_obs_less_T / resultant_matrix.sum()  # TODO: Check if this is correct.
+            #     result_P_W_g_Y = joint_dist_zT_and_obs_less_T / resultant_matrix.sum()
             #     flag = 1
             # else:
             #     result_P_W_g_Y = result_P_W_g_Y + (joint_dist_zT_and_obs_less_T / resultant_matrix.sum())
@@ -320,8 +297,7 @@ class PrimalDualPolicyGradientTest:
 
             # construct the A matrices.
             A_matrices = self.compute_A_matrices(T_theta, y_v)  # Compute for each y_v.
-            # result_prob_P_y, resultant_matrix = self.compute_probability_of_observations(A_matrices)  # TODO: Check
-            #  TODO: if this is better?! currently, it is done differently to be able to use autograd.
+            # result_prob_P_y, resultant_matrix = self.compute_probability_of_observations(A_matrices)
 
             # values for the term w_T = 1.
             p_theta_w_t_g_yv_1, gradient_p_theta_w_t_g_yv_1, result_P_y, gradient_P_y = self.P_W_g_Y(y_v, A_matrices)
@@ -378,81 +354,9 @@ class PrimalDualPolicyGradientTest:
 
         return -H, -nabla_H
 
-    # def compute_value_function(self, state_data, action_data, gamma=1):
-    #     # Compute the value of taking the masking policy.
-    #     # V^{pi_mask}((s,\sigma)) = E_{pi_mask}[\sum_{k=0}^\infty \gamma^k C(V_k, pi_mask(V_k))|V_0 = (s,\sigma)]
-    #     # state_data[v, t] = s (index of state)
-    #     # action_data[v, t] = a (index of action)
-    #
-    #     value_function = 0.0
-    #
-    #     # Iterate over each trajectory in state_data.
-    #     for i in range(state_data.shape[0]):
-    #         total_return = 0.0
-    #         # Iterate over each time step in the trajectory.
-    #         for t in range(state_data.shape[1]):
-    #             state_indx = state_data[i, t]
-    #             action_indx = action_data[i, t]
-    #             # Obtain the cost of masking.
-    #             cost = self.hmm.cost_dict[state_indx][action_indx]
-    #             # Accumulated discounted cost.
-    #             total_return += gamma ** t * cost
-    #
-    #         # Accumulated value over all trajectories
-    #         value_function += total_return
-    #     # Average over the number of trajectories
-    #     value_function = value_function / state_data.shape[0]
-    #     return value_function
 
     def log_policy_gradient(self, state, act):
-        # # gradient = torch.zeros([len(self.hmm.augmented_states), len(self.hmm.masking_acts)], dtype=torch.float32,
-        # #                        device=device)
-        #
-        # # test_gradient = torch.zeros([len(self.hmm.augmented_states), len(self.hmm.masking_acts)], dtype=torch.float32,
-        # #                             device=device)
-        #
-        # gradient = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        # # test_a_indicators = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        # # test_action_probs_a_prime = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        #
-        # # for s_prime in self.hmm.augmented_states:
-        # #     for a_prime in self.hmm.mask_act_indx_dict.values():
-        # for s_prime, a_prime in itertools.product(self.hmm.augmented_states,
-        #                                           self.hmm.mask_act_indx_dict.keys()):
-        #
-        #     # state_p = env.states[s_prime]
-        #     # act_p = env.actions[a_prime]
-        #     indicator_s = 0
-        #     indicator_a = 0
-        #     if state == self.hmm.augmented_states_indx_dict[s_prime]:
-        #         indicator_s = 1
-        #     if act == self.hmm.mask_act_indx_dict[a_prime]:
-        #         indicator_a = 1
-        #
-        #     # Debugging tensors.
-        #     # test_a_indicators[self.hmm.augmented_states_indx_dict[s_prime], a_prime] = indicator_a
-        #
-        #     logits = self.theta_torch[self.hmm.augmented_states_indx_dict[s_prime]]
-        #     logits = logits - logits.max()
-        #
-        #     actions_probs = F.softmax(logits, dim=0)
-        #     actions_probs_a_prime = actions_probs[self.hmm.mask_act_indx_dict[a_prime]]
-        #
-        #     # test_action_probs_a_prime[self.hmm.augmented_states_indx_dict[s_prime], a_prime] = actions_probs_a_prime
-        #
-        #     # partial_pi_theta = indicator_s * (indicator_a - torch.softmax(
-        #     #     self.theta_torch[self.hmm.augmented_states_indx_dict[s_prime]], dim=0)[
-        #     #     self.hmm.mask_act_indx_dict[a_prime]])
-        #     # testing if the above is correct or below .
-        #     partial_pi_theta = indicator_s * (indicator_a - actions_probs_a_prime)
-        #     gradient[self.hmm.augmented_states_indx_dict[s_prime], self.hmm.mask_act_indx_dict[
-        #         a_prime]] = partial_pi_theta
-        #     # Trying if the following is correct or the one in the previous line.
-        #     # gradient[s_prime, a_prime] = partial_pi_theta
-        #     # test_gradient[
-        #     #     self.hmm.augmented_states_indx_dict[s_prime], self.hmm.mask_act_indx_dict[a_prime]] = partial_pi_theta
 
-        ################################################################################################################################
 
         logits_2 = self.theta_torch - self.theta_torch.max(dim=1, keepdim=True).values
         action_indx = self.hmm.mask_act_indx_dict[act]
@@ -478,83 +382,6 @@ class PrimalDualPolicyGradientTest:
 
     def nabla_value_function(self, state_data, action_data, gamma=1):
 
-        # # value_function_gradient = torch.zeros([len(self.hmm.augmented_states), len(self.hmm.masking_acts)],
-        # #                                       dtype=torch.float32, device=device)
-        #
-        # value_function_gradient = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        # value_function = 0
-        #
-        # # Debugging test tensor.
-        # # log_policy_gradient_all = torch.zeros((self.batch_size, len(self.hmm.augmented_states), len(self.hmm.masking_acts)),
-        # #                                       dtype=torch.float32, device=device)
-        # # total_returns_all = torch.zeros(self.batch_size, dtype=torch.float32, device=device)
-        #
-        # for i in range(self.batch_size):
-        #     # log_P_x_i_gradient = torch.zeros([len(self.hmm.augmented_states), len(self.hmm.masking_acts)],
-        #     #                                  dtype=torch.float32, device=device)
-        #
-        #     log_P_x_i_gradient = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        #
-        #     total_return = 0
-        #     for t in range(self.T):
-        #         s = state_data[i, t]
-        #         a = action_data[i, t]
-        #
-        #         log_P_x_i_gradient = log_P_x_i_gradient + self.log_policy_gradient(s, a)
-        #
-        #         total_return = total_return + self.cost_matrix[s, a]
-        #
-        #     # log_policy_gradient_all[i] = log_P_x_i_gradient
-        #     # total_returns_all[i] = total_return
-        #
-        #     value_function_gradient += total_return * log_P_x_i_gradient
-        #     value_function += total_return
-        #
-        # value_function_gradient = value_function_gradient/self.batch_size
-        # value_function = value_function/self.batch_size
-        ################################################################################################################
-
-        # Below is the working first version of the REINFORCE code.
-        # value_function_gradient = torch.zeros([len(self.hmm.augmented_states), len(self.hmm.masking_acts)],
-        #                                       dtype=torch.float32, device=device)
-        #
-        # # value_function_gradient = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        # value_function = 0
-        # # batch_size = state_data.shape[0]
-        # #  hand.
-        # batch_size = self.V
-        # # Debugging test tensor.
-        # log_policy_gradient_all = torch.zeros((self.V, len(self.hmm.augmented_states), len(self.hmm.masking_acts)),
-        #                                       dtype=torch.float32, device=device)
-        # total_returns_all = torch.zeros(self.V, dtype=torch.float32, device=device)
-        #
-        # for i in range(batch_size):
-        #     log_P_x_i_gradient = torch.zeros([len(self.hmm.augmented_states), len(self.hmm.masking_acts)],
-        #                                      dtype=torch.float32, device=device)
-        #
-        #     # log_P_x_i_gradient = torch.zeros_like(self.theta_torch, dtype=torch.float32, device=device)
-        #
-        #     total_return = 0
-        #     for t in range(self.T):
-        #         s = state_data[i, t]
-        #         a = action_data[i, t]
-        #         # state = env.states[s]
-        #         # act = env.actions[a]
-        #         log_P_x_i_gradient += self.log_policy_gradient(s, a)
-        #         # cost = self.hmm.cost_dict[s][a]
-        #         # total_return += gamma ** t * cost
-        #         total_return += self.cost_matrix[s, a]
-        #
-        #     log_policy_gradient_all[i] = log_P_x_i_gradient
-        #     total_returns_all[i] = total_return
-        #
-        #     value_function_gradient += total_return * log_P_x_i_gradient
-        #     value_function += total_return
-        #
-        # value_function_gradient /= batch_size
-        # value_function /= batch_size
-
-        ###########################################################################################
 
         state_data = torch.tensor(state_data, dtype=torch.long, device=device)
         action_data = torch.tensor(action_data, dtype=torch.long, device=device)
@@ -637,7 +464,7 @@ class PrimalDualPolicyGradientTest:
                 # SGD gradients.
                 # grad_V = self.compute_policy_gradient_for_value_function(state_data, action_data, 1)
 
-                # Compare the above value with traditional function. #TODO: comment the next line if you only want entropy term.
+                # Compare the above value with traditional function.
                 grad_V_comparison, approximate_value = self.nabla_value_function(state_data, action_data, 1)
 
                 # approximate_value_total = approximate_value_total + approximate_value.item()
@@ -722,10 +549,6 @@ class PrimalDualPolicyGradientTest:
         # axis[1].legend()
         axis[1].grid(True)
 
-        # plt.xlabel("Iteration number")
-        # plt.ylabel("Values")
-        # plt.legend()
-        # plt.grid(True)
 
         # Display plot
         plt.tight_layout()

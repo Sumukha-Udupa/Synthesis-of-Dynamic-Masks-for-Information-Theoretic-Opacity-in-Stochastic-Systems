@@ -5,8 +5,6 @@ from loguru import logger
 
 def LP(mdp, gamma):
     model = Model(solver_name=GRB)
-    # gamma = 0.95 # For multi-init states
-    # gamma = 0.999  # for single-init states
 
     st_len = len(mdp.statespace)
     act_len = len(mdp.A)
@@ -19,8 +17,7 @@ def LP(mdp, gamma):
 
     for indx in range(st_len):
         if indx in indx_of_init_states:
-            init[indx] = 1 / len(indx_of_init_states)  # this is for uniform distribution. Todo: Generalize this to
-            # TODO: handle other possible initial dist. By taking the initial_distribution.
+            init[indx] = 1 / len(indx_of_init_states)  # this is for uniform distribution.
 
     # The below is the set-up for single initial state.
     # indx = mdp.statespace.index(mdp.init)
@@ -60,8 +57,7 @@ def LP(mdp, gamma):
             #
             # R_1[(i * 3) + a] = mdp.R1[(mdp.statespace[i], mdp.A[a])]
 
-            # R_2[(i * act_len) + a] = mdp.R2[(mdp.statespace[i], mdp.A[a])]  # Todo: Check if the rewards are
-            # assigned appropriately?!
+            # R_2[(i * act_len) + a] = mdp.R2[(mdp.statespace[i], mdp.A[a])]
 
             R_1[(i * act_len) + a] = mdp.reward[mdp.statespace[i]][mdp.A[a]]
 
@@ -105,7 +101,7 @@ def LP(mdp, gamma):
     print(status)
     if status == OptimizationStatus.OPTIMAL:
         print("The model objective is:",
-              model.objective_value)  # Todo: CHECK if the VALUE of MODEL OBJECTIVE is Correct!!!!!!!
+              model.objective_value)
         logger.debug(f"The model objective is: {model.objective_value}")
 
         # m_res = [m[i].x for i in range(st_len * act_len)]
@@ -142,29 +138,6 @@ def LP(mdp, gamma):
                     pol[(mdp.statespace[i], mdp.A[a])] = 0
             else:
                 pol[(mdp.statespace[i], mdp.A[a])] = 0
-
-    # Printing the policy.
-    # print(pol)
-    # logger.debug(f"Policy generated.")
-    # for st in pol:
-    #     logger.debug(f"{st} : {pol[st]} \n")
-    #
-    # with open('policy_6_by_6_dynamic_sensor_0.4.pickle', 'wb') as file:
-    #     pickle.dump(pol, file)
-
-    # # The following is the modification for the goal policy
-    # pol[(0, 'W')] = 1
-    # pol[(6, 'S')] = 0
-    # pol[(6, 'E')] = 1
-    # pol[(18, 'S')] = 0
-    # pol[(18, 'E')] = 1
-    # pol[(30, 'E')] = 0.5
-    # pol[(30, 'N')] = 0.5
-    # # pol[(12, 'S')] = 0
-    # # pol[(12, 'N')] = 1
-    # # pol[(7, 'E')] = 1
-    # pol[(1, 'N')] = 1
-    # # pol[(14, 'N')] = 1
 
     # The following is the modification for the goal policy
     pol[(0, 'W')] = 1
@@ -203,6 +176,3 @@ def generate_matrix(mdp):
                     F[mdp.statespace.index(st_)][mdp.statespace.index(st) * act_len + mdp.A.index(act)] = pro
     return E, F
 
-# if __name__ == "__main__":
-#     mdp = MDP_manual.create_mdp()
-#     LP(mdp, N=10, K=7.03)

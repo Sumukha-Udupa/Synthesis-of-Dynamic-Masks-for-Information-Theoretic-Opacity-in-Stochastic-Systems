@@ -19,16 +19,12 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
     ncols = 6
     nrows = 6
     target = [9, 20, 23]
-    # target for testing.
-    # target = [23]
 
     secret_goal_states = [9, 20, 23]
     obstacles = [17, 19]
     unsafe_u = [1, 13, 15, 35]
     non_init_states = [1, 25, 9, 14, 15, 17, 19, 23, 35]
-    # initial = {30, 24, 18, 12, 6, 0}
     initial = {30, 12}
-    # initial = {30}
 
     initial_dist = dict([])
     # considering a single initial state.
@@ -41,22 +37,12 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
     robot_ts = read_from_file_MDP_old('robotmdp.txt')
 
     # sensor setup
-    # sensors = {'A', 'B', 'C', 'D', 'E', 'NO'}
     sensors = {'A', 'B', 'C', 'D', 'NO'}
-
-    # coverage sets
-    # setA = {3, 4, 9, 10}
-    # setB = {21, 22, 27, 28, 33, 34}
-    # setC = {23, 29, 35}
-    # setD = {6, 7, 8, 12, 13, 14}
-    # setE = {5, 11}
-    # setNO = {0, 1, 2, 15, 16, 17, 18, 19, 20, 24, 25, 26, 30, 31, 32}
 
     setA = {3, 4, 9, 10}
     setB = {21, 22, 28}
     setC = {23, 29, 35}
     setD = {6, 7, 8, 12, 13, 14}
-    # setE = {20}
     setNO = {1, 2, 5, 11, 15, 16, 17, 19, 24, 25, 26, 30, 31, 32, 33, 34, 20, 27, 18, 0}
 
     # masking actions
@@ -66,13 +52,9 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
     masking_action[1] = {'B'}
     masking_action[2] = {'C'}
     masking_action[3] = {'D'}
-    # masking_action[4] = {'E'}
     masking_action[4] = {'F'}  # 'F' is the no masking action.
 
     no_mask_act = 4
-
-    # sensor noise
-    # sensor_noise = 0.15
 
     # sensor costs
     sensor_cost = dict([])
@@ -82,12 +64,6 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
     sensor_cost['D'] = 5
     # sensor_cost['E'] = 25
     sensor_cost['F'] = 0  # Cost for not masking.
-
-    # Define a threshold for sensor masking.
-    # threshold = 70
-    # threshold = 35
-
-    # threshold = 240
 
     sensor_cost_normalization = sum(abs(cost) for cost in sensor_cost.values())
 
@@ -118,15 +94,6 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
     agent_gw_1.mdp.get_reward()
     agent_gw_1.draw_state_labels()
 
-    # # Obtain the goal policy.
-    # goal_policy = LP(mdp=agent_gw_1.mdp, gamma=0.9)
-    #
-    # logger.debug("Goal policy:")
-    # logger.debug(goal_policy)
-    #
-    # with open('goal_policy.pickle', 'wb') as file:
-    #     pickle.dump(goal_policy, file)
-
     goal_policy_file = "goal_policy.pickle"
 
     # Load from goal policy.
@@ -140,8 +107,6 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
         # Computing the prior entropy.
         # Monte carlo simulation to obtain the approximate probability of being in the final state in T=10.
 
-        # prior_list = list()
-        # iterations_list = list()
         total_prior = 0
 
         for iterations in range(1000):
@@ -184,17 +149,6 @@ def run_pharma_example_with_dynamic_maskin(iter_num=1000, batch_size=100, V=100,
 
             # prior_list.append(-prior_entropy)
             total_prior += (-prior_entropy)
-
-        # iterations_list = range(1000)
-        # # Create the plot
-        # plt.plot(iterations_list, prior_list)
-        #
-        # plt.title('Prior Distribution')
-        # plt.xlabel('Iterations')
-        # plt.ylabel('Entropy')
-        #
-        # plt.grid(True)
-        # plt.show()
 
         print(f"Mean prior entropy = {total_prior / 1000}")
         # print(f"Final state not goal state = {final_state_not_goal_state}")

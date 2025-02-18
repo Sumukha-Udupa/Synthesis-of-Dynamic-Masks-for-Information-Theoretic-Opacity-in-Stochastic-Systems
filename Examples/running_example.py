@@ -73,7 +73,6 @@ def running_example(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.
     masking_action[1] = {'G'}
     masking_action[2] = {'P'}
     masking_action[3] = {'B'}
-    # masking_action[4] = {'E'}
     masking_action[4] = {'F'}  # 'F' is the no masking action.
 
     no_mask_act = 4
@@ -87,16 +86,12 @@ def running_example(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.
     sensor_cost['G'] = 10
     sensor_cost['P'] = 10
     sensor_cost['B'] = 30
-    # sensor_cost['E'] = 15
     sensor_cost['F'] = 0  # Cost for not masking.
 
     if threshold == 60:
         eta = 3.2
         kappa = 0.25
 
-    # Define a threshold for sensor masking.
-    # threshold = 60
-    # threshold = 20
 
     sensor_cost_normalization = sum(abs(cost) for cost in sensor_cost.values())
 
@@ -153,8 +148,7 @@ def running_example(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.
         # Computing the prior entropy.
         # Monte carlo simulation to obtain the approximate probability of being in the final state in T=10.
 
-        # prior_list = list()
-        # iterations_list = list()
+
         total_prior = 0
 
         for iterations in range(1000):
@@ -212,16 +206,7 @@ def running_example(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.
             # prior_list.append(-prior_entropy)
             total_prior += (-prior_entropy)
 
-        # iterations_list = range(1000)
-        # # Create the plot
-        # plt.plot(iterations_list, prior_list)
-        #
-        # plt.title('Prior Distribution')
-        # plt.xlabel('Iterations')
-        # plt.ylabel('Entropy')
-        #
-        # plt.grid(True)
-        # plt.show()
+
 
         print(f"Mean prior entropy = {total_prior / 1000}")
         # print(f"Final state not goal state = {final_state_not_goal_state}")
@@ -231,8 +216,8 @@ def running_example(iter_num=1000, batch_size=100, V=100, T=3, eta=8.2, kappa=4.
     hmm_p2 = HiddenMarkovModelP2(agent_mdp, sensor_net, goal_policy, secret_goal_states=secret_goal_states,
                                  no_mask_act=no_mask_act)
 
-    # masking_policy_gradient = PrimalDualPolicyGradient(hmm=hmm_p2, iter_num=1000, V=10, T=10, eta=1.5, kappa=0.1, epsilon=threshold)
-    # masking_policy_gradient.solver()
+    # masking_policy_gradient = PrimalDualPolicyGradient(hmm=hmm_p2, iter_num=1000, V=10, T=10, eta=1.5, kappa=0.1,
+    # epsilon=threshold) masking_policy_gradient.solver()
 
     # masking_policy_gradient = PrimalDualPolicyGradientTest(hmm=hmm_p2, iter_num=1000, batch_size=100, V=100, T=3,
     # eta=8.2, kappa=0.25, epsilon=threshold, sensor_cost_normalization=sensor_cost_normalization)
