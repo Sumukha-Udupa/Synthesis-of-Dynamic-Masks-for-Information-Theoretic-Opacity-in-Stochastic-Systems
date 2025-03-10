@@ -103,13 +103,19 @@ The following are the minimum system requirements (as the experiments were condu
 
 ## Citation
 
-If you found this repo useful, please cite our paper.
+If you use this code in your research or found this useful, please cite the following paper:
 
-'''bibtex
+**Synthesis of Dynamic Masks for Information-Theoretic Opacity in Stochastic Systems**  
+Author(s): Sumukha Udupa, Chongyang Shi, Jie Fu  
+Published in: arXiv preprint arXiv:2502.10552, 2025  
+[Link to Paper](https://arxiv.org/abs/2502.10552)
+
+```bibtex
 @article{udupa2025synthesis,
   title={Synthesis of Dynamic Masks for Information-Theoretic Opacity in Stochastic Systems},
   author={Udupa, Sumukha and Shi, Chongyang and Fu, Jie},
   journal={arXiv preprint arXiv:2502.10552},
   year={2025}
 }
+```
 
